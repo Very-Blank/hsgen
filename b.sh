@@ -1,1 +1,1 @@
-g++ main.cpp -o hsfm
+g++ main.cpp -o hsgen
