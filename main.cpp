@@ -37,7 +37,7 @@ int main(int argc, char* argv[]){
 		return -1;
 	}
 	// Renaming source and hearder files
-	if(strcmp("-rn", argv[1]) == 0){
+	if(argc == 3 && strcmp("-rn", argv[1]) == 0){
 		std::string path = argv[2];
 		std::string old_name = argv[3];
 		std::string new_name = argv[4];
