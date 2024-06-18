@@ -150,7 +150,7 @@ int main(int argc, char* argv[]){
 				new_header_file.close();
 
 			} else {
-				std::cerr << "hsgen: Couldn't create a the header file: " << new_name << std::endl;
+				std::cerr << "hsgen: Couldn't create the header file: " << new_name << std::endl;
 				return -1;
 			}
 
@@ -187,7 +187,7 @@ int main(int argc, char* argv[]){
 				new_source_file.close();
 
 			} else{
-				std::cerr << "hsgen: Couldn't create a the source file: " << new_name << std::endl;
+				std::cerr << "hsgen: Couldn't create the source file: " << new_name << std::endl;
 				return -1;
 			}
 
