@@ -187,7 +187,7 @@ int main(int argc, char* argv[]){
 				new_source_file.close();
 
 			} else{
-				std::cerr << "hsgen: Source file already exists aborting" << std::endl;
+				std::cerr << "hsgen: Couldn't create a the source file: " << new_name << std::endl;
 				return -1;
 			}
 
