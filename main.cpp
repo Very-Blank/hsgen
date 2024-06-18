@@ -20,8 +20,9 @@ namespace fs = std::filesystem;
 namespace Mode {
 	enum values{
 		help,
-		rename,
 		create,
+		rename,
+		remove,
 		error,
 	};
 }
@@ -39,6 +40,9 @@ int main(int argc, char* argv[]){
 			std::cout << "hsgen: " <<  '\n';
 			std::cout << "hsgen: Rename: hsgen -rn <path> <old_name> <new_name>" << std::endl;
 			std::cout << "hsgen: It will rename the files in the include and src folders as pointed by the supplied path." << std::endl;
+			std::cout << "hsgen: " <<  '\n';
+			std::cout << "hsgen: Remove: hsgen -del <path> <name>" << std::endl;
+			std::cout << "hsgen: It will remove the files in the include and src folders as pointed by the supplied path." << std::endl;
 			return 0;
 		}
 
@@ -124,7 +128,6 @@ int main(int argc, char* argv[]){
 				new_header_file << "#define " << to_upper_name << "_HPP" << '\n';
 				new_header_file << '\n';
 
-				// write the the data of the file
 				std::ifstream old_header_file(old_header_file_name);
 				if (old_header_file.is_open()) {
 					std::string line;
@@ -139,8 +142,15 @@ int main(int argc, char* argv[]){
 					}
 
 					old_header_file.close();
-					std::remove(old_header_file_name.c_str());
-					std::cout << "hsgen: Copyied " << old_name << " header files's contents and deleted it" << std::endl;
+
+					int header_delete = std::remove(old_header_file_name.c_str());
+					std::cout << "hsgen: Copyied " << old_name << " header files's contents";
+					if (header_delete != 0) {
+						std::cout << ", but failed to delete it" << std::endl;
+					} else {
+						std::cout << " and deleted it" << std::endl;
+					}
+
 				} else {
 					std::cerr << "hsgen: Couldn't open the old header file, new header file doesn't have the old's contents" << std::endl;
 					std::cerr << "hsgen: Old header file will not be deleted" << std::endl;
@@ -160,7 +170,6 @@ int main(int argc, char* argv[]){
 				new_source_file << "#include " << '"' << new_name << ".hpp" << '"'  << '\n';
 				new_source_file << '\n';
 
-				// write the the data of the file
 				std::ifstream old_source_file(old_source_file_name);
 				if (old_source_file.is_open()) {
 					std::string line;
@@ -175,8 +184,14 @@ int main(int argc, char* argv[]){
 					}
 
 					old_source_file.close();
-					std::remove(old_source_file_name.c_str());
-					std::cout << "hsgen: Copyied " << old_name << " source files's contents and deleted it" << std::endl;
+
+					int source_delete = std::remove(old_source_file_name.c_str());
+					std::cout << "hsgen: Copyied " << old_name << " source files's contents";
+					if (source_delete != 0) {
+						std::cout << ", but failed to delete it" << std::endl;
+					} else {
+						std::cout << " and deleted it" << std::endl;
+					}
 
 				} else {
 					std::cerr << "hsgen: Couldn't open the old source file, new header file doesn't have the old's contents" << std::endl;
@@ -194,18 +209,33 @@ int main(int argc, char* argv[]){
 			return 0;
 		}
 
-		default : {
-			std::cout << "hsgen: Incorrect arguments supplied" << std::endl;
-			return -1;
+		case Mode::remove : {
+			std::string header_file_name;
+			std::string source_file_name;
+			Set_string_path(header_file_name, source_file_name, argv[1], argv[2]);
+			int header_remove = std::remove(header_file_name.c_str());
+			int source_remove = std::remove(source_file_name.c_str());
+			if (header_remove != 0) {
+				std::cerr << "hsgen: Couldn't remove the file: " << header_file_name << std::endl;
+			} else if (source_remove != 0) {
+				std::cerr << "hsgen: Couldn't remove the file: " << source_file_name << std::endl;
+			}
 		}
 
+		default : {
+			std::cerr << "hsgen: Incorrect arguments supplied" << std::endl;
+			std::cout << "hsgen: hsgen -help" << std::endl;
+			return -1;
+		}
 	}
-
 }
 
 Mode::values Get_mode(int argc, char* argv[]){
 	if (argc == 2 && (strcmp("-help", argv[1]) == 0 || strcmp("-h", argv[1]) == 0)) {
 		return Mode::help;
+
+	} else if(argc == 4 && strcmp("-del", argv[1]) == 0){
+		return Mode::remove;
 
 	} else if(argc == 5 && strcmp("-rn", argv[1]) == 0){
 		return Mode::rename;
