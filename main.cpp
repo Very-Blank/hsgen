@@ -217,9 +217,18 @@ int main(int argc, char* argv[]){
 			int source_remove = std::remove(source_file_name.c_str());
 			if (header_remove != 0) {
 				std::cerr << "hsgen: Couldn't remove the file: " << header_file_name << std::endl;
-			} else if (source_remove != 0) {
-				std::cerr << "hsgen: Couldn't remove the file: " << source_file_name << std::endl;
+
+			} else {
+				std::cerr << "hsgen: Removed the file: " << header_file_name << std::endl;
 			}
+
+			if (source_remove != 0) {
+				std::cerr << "hsgen: Couldn't remove the file: " << source_file_name << std::endl;
+			} else {
+				std::cerr << "hsgen: Removed the file: " << source_file_name << std::endl;
+			}
+
+			return 0;
 		}
 
 		default : {
