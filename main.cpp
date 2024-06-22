@@ -212,7 +212,7 @@ int main(int argc, char* argv[]){
 		case Mode::remove : {
 			std::string header_file_name;
 			std::string source_file_name;
-			Set_string_path(header_file_name, source_file_name, argv[1], argv[2]);
+			Set_string_path(header_file_name, source_file_name, argv[2], argv[3]);
 			int header_remove = std::remove(header_file_name.c_str());
 			int source_remove = std::remove(source_file_name.c_str());
 			if (header_remove != 0) {
